@@ -14,6 +14,7 @@ from includes.spectral.spectral import Spectral
 
 import collections
 import random
+import base64
 
 matplotlib.use("WebAgg")
 
@@ -85,6 +86,10 @@ def update_graph():
 
         if('l_cluster' in request.form and request.form['l_cluster'] == "louvain"):
             cluster = True
+        elif('l_cluster' in request.form and request.form['l_cluster'] == "spectral"):
+            graph_["spectral"] = True
+        else:
+            graph_["spectral"] = False
 
         display_el = request.form.getlist("display_el")
 
@@ -97,13 +102,6 @@ def update_graph():
             graph_["fixed_n"] = True
         else:
             graph_["fixed_n"] = False
-
-
-        if('spectral' in display_el):
-            graph_["spectral"] = True
-        else:
-            graph_["spectral"] = False
-
 
         if('n_dist' in request.form and not request.form['n_dist'] == ""):
             graph_["n_dist"] = float(request.form['n_dist'])
@@ -124,9 +122,9 @@ def update_graph():
     f_.truncate(0)
     pickle.dump(graph_, f_)
 
-    draw_graph(graph_, color_map, cluster)
+    pos = draw_graph(graph_, color_map, cluster)
     
-    return render_template('graph.html', graph_plot = 'graphs/plots/graph_plot.png', form_data = request.form)
+    return render_template('graph.html', graph_plot = 'graphs/plots/graph_plot.png', form_data = request.form, pos = pos)
 
 
 
@@ -282,7 +280,9 @@ def draw_graph(graph, color_map = False, cluster = False):
 
     else:
         nx.draw(G, pos, edge_color=graph['edges'], width=0.6, font_size="12", font_color= graph["font_color"], with_labels = graph['labels'], node_size = node_size)
-
+        
+    nx.set_node_attributes(G, dict([(i, pos[i][0] * 100) for i in G.nodes()]), 'x')
+    nx.set_node_attributes(G, dict([(i, pos[i][1] * 100) for i in G.nodes()]), 'y')
     plt.axis('off')
     plt.savefig("static/graphs/plots/graph_plot.png", dpi = 300)
     plt.clf()
@@ -294,8 +294,11 @@ def draw_graph(graph, color_map = False, cluster = False):
     data["fixed_n"] = graph["fixed_n"]
     data["edges"] = graph["edges"]
     data["font_color"] = graph['font_color']
+    data['pos'] = json.dumps(pos, cls=NumpyEncoder)
     with open(os.path.join(app.config['UPLOAD_PATH'], 'graph.json'), 'w') as f:
         json.dump(data, f)
+
+    return pos
 
 def valid_coloring(graph,coloring):
     return not any([coloring[x]==coloring[y] for (x,y) in graph.edges()])
@@ -594,6 +597,10 @@ def operations():
 
     if('l_cluster' in op and request.args.get('l_cluster') == 'louvain'):
         cluster = True
+    elif('l_cluster' in op and request.args.get('l_cluster') == 'spectral'):
+        graph_["spectral"] = True
+    else:
+        graph_["spectral"] = False
 
     if('d_labels' in op):
         graph_["labels"] = True
@@ -613,11 +620,22 @@ def operations():
     f_ = open('model.pkl', 'wb')
     pickle.dump(graph_, f_)
 
-    draw_graph(graph_, color_map, cluster)
+    pos = draw_graph(graph_, color_map, cluster)
 
 
     return jsonify(result=True, nn = list(nodes.keys()), ee = edges)
 
+
+class NumpyEncoder(json.JSONEncoder):
+    """ Special json encoder for numpy types """
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
 
 if __name__ == '__main__':
    app.run(debug = True)

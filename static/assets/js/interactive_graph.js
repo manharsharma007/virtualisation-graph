@@ -1,7 +1,7 @@
 var width = 1000,
 height = 760;
 
-function interactive_graph(edges = true) {
+function interactive_graph(edges = true, simulate = true) {
     d3.select('#svg').selectAll('*').remove();
     d3.select('body').select('.tooltip').remove();
     var svg = d3.select("#svg").select("svg")
@@ -20,9 +20,7 @@ function interactive_graph(edges = true) {
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-    var simulation = d3.forceSimulation()
-            .force("charge", d3.forceManyBody())
-            .force("center", d3.forceCenter(width / 2, height / 2));
+    var simulation = d3.forceSimulation();
     if(edges) {
         simulation
             .force("link", d3.forceLink().id(function(d) { return d.id; }));
@@ -34,6 +32,7 @@ function interactive_graph(edges = true) {
       var font_color = graph.font_color;
       var d_labels = graph.d_labels;
       var fixed_n = graph.fixed_n;
+      var pos = JSON.parse(graph.pos);
 
       if(edges) {
 
@@ -73,13 +72,25 @@ function interactive_graph(edges = true) {
         .text(function(d) { return d.id; });
       }
 
-      simulation
-        .nodes(graph.nodes)
-        .on("tick", ticked);
+      if(simulate == true) {
+        simulation.force("charge", d3.forceManyBody())
+              .force("center", d3.forceCenter(width / 2, height / 2))
+          .nodes(graph.nodes)
+          .on("tick", ticked);
 
-      if(edges) {
+        if(edges) {
           simulation.force("link")
             .links(graph.links);
+        }
+      }
+        else {
+          simulation.nodes(graph.nodes).force("center", d3.forceCenter(width / 2, height / 2))
+            .on("tick", ticked);
+
+          if(edges) {
+            simulation.force("link")
+              .links(graph.links).strength(0);
+          }
         }
 
       svg.selectAll("circle").on("click", function(d){

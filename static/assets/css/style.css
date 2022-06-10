@@ -83,20 +83,23 @@
 
 .form-control input[type=submit], .form-control .btn {
 	width: 100%;
-	background: #3a3a3a;
+	background: #777;
 	height: 38px;
 	border: 0;
 	border-radius: 5px;
 	color:#fff;
  	font-family: Helvetica Neue;
  	font-size: 12px;
- 	box-shadow: 0px 2.5px 12px #eee;
+ 	box-shadow: 0px 2.5px 12px #000;
  	position: relative;
  	display: block;
  	margin-bottom: 15px;
  	text-align: center;
  	padding: 12px;
  	text-decoration: none;
+}
+.form-control input[type=submit]:hover, .form-control .btn:hover {
+	opacity: 0.9;
 }
 .sec-btn {
 	background: #dd3838!important;
@@ -107,11 +110,12 @@
 }
 
 .controls {
-	width: 440px;
+	width: 380px;
 	position: relative;
 	padding: 25px;
+	margin: 5px;
 	box-shadow: 0px 2.5px 12px #eee;
-	background: rgba(255,255,255,0.2);
+	background: rgba(0,0,0,0.85);
 	border: #eee solid 1px;
 	margin-left: auto;
 	-webkit-backdrop-filter: blur(10px);
@@ -119,8 +123,11 @@
 }
 .half-control{
 	display: inline-block;
-	width:45%;
+	width:48%;
 	position: relative;
+}
+.half-control:first-child{
+	margin-right: 2%;
 }
 .control-70{
 	display: inline-block;
@@ -140,18 +147,22 @@
 	display: inline-block;
 }
 .controls label {
-	width: 110px;
-	color: #444;
+	width: 100%;
+	margin-bottom:  8px;
+	color: #eee;
+	font-size: 14px;
 	vertical-align: middle;
 }
-.controls input, .controls select {
-	width: calc(100% - 130px);
+.controls input[type=text],.controls input[type=number], .controls select {
+	width: 100%;
 	padding: 10px 5px;
 	border-radius: 5px;
-	border: #ddd solid 1px;
+	border: #fff solid 1px;
 	height: 40px;
 	background: #fff;
-
+}
+.controls select {
+	-webkit-appearance: none;
 }
 .full-span {
 	width: 100% !important;
@@ -159,7 +170,7 @@
 input[type="color"] {
 	width: 30px;
 	height: 30px;
-	border: none;
+	border: #aaa solid 2px;
 	border-radius: 50%;
 	padding: 0;
 	background: none;
@@ -237,4 +248,9 @@ input[type="checkbox"] {
 	padding:4px 16px;
 	color: #555;
 	margin:0 !important;
+}
+.info-screen {
+	background: #eee;
+	font-size: 14px;
+	padding: 10px 8px;
 }

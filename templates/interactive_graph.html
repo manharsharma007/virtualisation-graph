@@ -65,8 +65,10 @@ div.tooltip {
   </div>
 	<div class="row graph-screen">
 		<div class="graph col-70">
-      <div class="nodes"><span id="Nodes">Nodes: ...</span></div>
-      <p id='Neighbours'>Neighbours: ... </p>
+      <div class="info-screen">
+        <div class="nodes"><span id="Nodes">Nodes: ...</span></div>
+        <p id='Neighbours'>Neighbours: ... </p>
+      </div>
 			<div id="svg"></div>
 		</div>
 
@@ -75,32 +77,37 @@ div.tooltip {
         <div class="form">
           <form method="post" action="/update_graph">
             <div class="form-control">
-              <label>Remove Node</label>
-              <input type="text" placeholder="Node1" value="" class="input-control" data-token="rm_node" data-node="node">
+              <div class="half-control">
+                <label>Remove Node</label>
+                <input type="text" placeholder="Node1" value="" class="input-control" data-token="rm_node" data-node="node">
+              </div>
+              <div class="half-control">
+                <label>Remove Edge</label>
+                <input type="text" placeholder="Node1, Node2" value="" class="input-control" data-token="rm_edge" data-node="edge">
+              </div>
             </div>
             <div class="form-control">
-              <label>Remove Edge</label>
-              <input type="text" placeholder="Node1, Node2" value="" class="input-control" data-token="rm_edge" data-node="edge">
-            </div>
-            <div class="form-control">
-              <label>Process Flow</label>
-              <input type="text" placeholder="eg n1, n2, n3" value="" class="input-control" data-token="v_process" data-node="process_agents">
-            </div>
-            <div class="form-control">
-              <div class="control-70">
+              <div class="half-control">
                 <label>Random Walk</label>
                 <input type="text" placeholder="node1, node2" value="" class="input-control" data-token="w_node" data-node="w_agents">
               </div>
-              <div class="control-30">
+              <div class="half-control">
                 <input type="text" placeholder="length" value="" class="input-control" data-token="walk_len" data-node="w_length">
               </div>
             </div>
             <div class="form-control">
-              <label>Cluster</label>
-              <select class="input-control" data-token="l_cluster" data-node="l_cluster">
-                <option vlaue="">---</option>
-                <option value="louvain">Louvain Grouping</option>
-              </select>
+              <div class="half-control">
+                <label>Process Flow</label>
+                <input type="text" placeholder="eg n1, n2, n3" value="" class="input-control" data-token="v_process" data-node="process_agents">
+              </div>
+              <div class="half-control">
+                <label>Cluster</label>
+                <select class="input-control" data-token="l_cluster" data-node="l_cluster">
+                  <option vlaue="">---</option>
+                  <option value="louvain">Louvain Grouping</option>
+                  <option value="spectral">Spectral Grouping</option>
+                </select>
+              </div>
             </div>
             <div class="form-control">
               <div class="half-control">
@@ -114,12 +121,14 @@ div.tooltip {
               </div>
             </div>
             <div class="form-control">
-                <label>Label color</label>
-                <input type="color" value="" class="input-control" data-token="c_labels" data-node="c_labels">
-            </div>
-            <div class="form-control">
-              <label>Edges color</label>
-              <input type="color" value="" class="input-control" data-token="c_edges" data-node="c_edges">
+              <div class="half-control">
+                  <label>Label color</label>
+                  <input type="color" value="" class="input-control" data-token="c_labels" data-node="c_labels">
+              </div>
+              <div class="half-control">
+                <label>Edges color</label>
+                <input type="color" value="" class="input-control" data-token="c_edges" data-node="c_edges">
+              </div>
             </div>
             <div class="form-control buttons">
               <input type="button" id="send_form" class="btn" value="Visualise">
@@ -199,7 +208,13 @@ div.tooltip {
           },
           success: function(data){
             $('.overlay').css('display', 'none');
-            interactive_graph(true)
+            simulate = $('.input-control[data-token=l_cluster]').val();
+            if(simulate == 'spectral') {
+              interactive_graph(true, false);
+            }
+            else {
+              interactive_graph(true);
+            }
           },
           error: function(data){
             $('.overlay').css('background', 'rgba(255,80,100,1)');
