@@ -1,0 +1,16 @@
+1 First_node (x,y) "r"
+2 Second_node
+3 third
+4 fourth
+5 fifth
+6 sixth
+7 seventh
+#
+1 2
+1 3
+1 5
+2 4
+3 6
+6 7
+1 7
+2 7

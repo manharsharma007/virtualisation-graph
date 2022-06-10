@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Main plot</title>
+	<link rel="stylesheet" type="text/css" href="static/assets/css/style.css">
+</head>
+<body>
+<div class="container">
+	<div class="row graph-screen">
+		{% if graph_plot %}
+		<div class="graph col-70">
+			<img class="src" src="{{ url_for('static', filename=graph_plot) }}"></img>
+		</div>
+		{% endif %}
+
+		<div class="col-30">
+			<div class="controls">
+				<div class="form">
+					{% if graph_plot %}
+					<form method="post" action="/update_graph">
+						<div class="form-control">
+							<label>Remove Node</label>
+							<input type="text" name="rm_node" placeholder="Node1" value="{% if 'rm_node' in form_data %}{{ form_data['rm_node'] }}{% endif %}">
+						</div>
+						<div class="form-control">
+							<label>Remove Edge</label>
+							<input type="text" name="rm_edge" placeholder="Node1, Node2" value="{{ form_data['rm_edge'] }}">
+						</div>
+						<div class="form-control">
+							<label>Process Flow</label>
+							<input type="text" name="v_process" placeholder="eg n1, n2, n3" value="{{ form_data['v_process'] }}">
+						</div>
+						<div class="form-control">
+							<div class="control-70">
+								<label>Random Walk</label>
+								<input type="text" name="w_node" placeholder="node1, node2" value="{{ form_data['w_node'] }}">
+							</div>
+							<div class="control-30">
+								<input type="text" name="w_length" placeholder="length" value="{{ form_data['w_length'] }}">
+							</div>
+						</div>
+						<div class="form-control">
+							<label>Cluster</label>
+							<select name="l_cluster">
+								<option>---</option>
+								<option value="louvain">Louvain Grouping</option>
+							</select>
+							<div class="half-control">
+								<label>Spectral Drawing</label>
+								<input type="checkbox" name="display_el" value="spectral">
+							</div>
+						</div>
+						<div class="form-control">
+							<div class="half-control">
+								<label>Display Labels</label>
+								<input type="checkbox" name="display_el" value="labels">
+							</div>
+
+							<div class="half-control">
+								<label>Label color</label>
+								<input type="color" name="c_labels" value="{% if( form_data['c_labels'] != '') %}{{ form_data['c_labels'] }}{% else %}#aaaaaa{% endif %}">
+							</div>
+						</div>
+						<div class="form-control">
+
+							<div class="half-control">
+								<label>Fixed Nodes</label>
+								<input type="checkbox" name="display_el" value="nodes">
+							</div>
+
+							<div class="half-control">
+								<label>Node distance</label>
+								<input type="number" name="n_dist" value="" step="0.02">
+							</div>
+						</div>
+						<div class="form-control">
+							<label>Node Size</label>
+							<input type="range" name="node_size" value="{{ form_data['node_size'] }}" class="slider" min="10" max="200">
+						</div>
+						<div class="form-control">
+							<label>Edges color</label>
+							<input type="color" name="c_edges" value="{% if( form_data['c_edges'] != '') %}{{ form_data['c_edges'] }}{% else %}#aaaaaa{% endif %}">
+						</div>
+						<div class="form-control buttons">
+							<input type="submit" name="Visualize">
+							{% if graph_plot %}
+							<a class="btn" href="{{ url_for('interactive_graph') }}">Interactive Graph</a>
+							{% endif %}
+							<a class="btn sec-btn" href="/">New Graph</a>
+						</div>
+					</form>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
+
+
+<div class="form">
+	
+</div>

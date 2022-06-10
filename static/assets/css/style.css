@@ -1,0 +1,240 @@
+* {
+	box-sizing: border-box;
+ font-family: Helvetica Neue;
+
+}
+.container {
+	width:100%;
+	height: 100%;
+	position: absolute;
+	top:0;
+	left: 0;
+}
+.container {
+	background:
+    radial-gradient(#eee 3px, transparent 4px),
+    radial-gradient(#eee 3px, transparent 4px),
+    linear-gradient(#fff 4px, transparent 0),
+    linear-gradient(45deg, transparent 74px, transparent 75px, #eee 75px, #eee 76px, transparent 77px, transparent 109px),
+    linear-gradient(-45deg, transparent 75px, transparent 76px, #eee 76px, #eee 77px, transparent 78px, transparent 109px),
+    #fff;
+    background-size: 109px 109px, 109px 109px,100% 6px, 109px 109px, 109px 109px;
+    background-position: 54px 55px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+}
+
+.row {
+	width: 100%;
+	position: relative;
+}
+.col-70, .col-30 {
+	float: left;
+}.col-70 {
+	width:100%;
+}.col-30 {
+	width: auto;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.main-center {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+.main-center .controls {
+	top:50%;
+	transform: translateY(-65%);
+	margin: 0 auto;
+	width:400px;
+}
+
+.main-center .form-control [type="file"] {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.main-center .form-control [type="file"] + label {
+ padding: 12px;
+ display: block;
+ width: 100%;
+ background: #f17777;
+ margin-bottom: 20px;
+ text-align: center;
+ color: #fff;
+ border-radius: 5px;
+ font-size: 12px;
+ box-shadow: 0px 2.5px 12px #eee;
+}
+
+.main-center [type="file"]:focus + label,
+.main-center [type="file"] + label:hover {
+  background: #f45555;
+}
+
+.main-center [type="file"]:focus + label {
+  /* File upload focus state button styles */
+}
+
+.form-control input[type=submit], .form-control .btn {
+	width: 100%;
+	background: #3a3a3a;
+	height: 38px;
+	border: 0;
+	border-radius: 5px;
+	color:#fff;
+ 	font-family: Helvetica Neue;
+ 	font-size: 12px;
+ 	box-shadow: 0px 2.5px 12px #eee;
+ 	position: relative;
+ 	display: block;
+ 	margin-bottom: 15px;
+ 	text-align: center;
+ 	padding: 12px;
+ 	text-decoration: none;
+}
+.sec-btn {
+	background: #dd3838!important;
+}
+
+.buttons {
+	margin-top: 60px;
+}
+
+.controls {
+	width: 440px;
+	position: relative;
+	padding: 25px;
+	box-shadow: 0px 2.5px 12px #eee;
+	background: rgba(255,255,255,0.2);
+	border: #eee solid 1px;
+	margin-left: auto;
+	-webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+.half-control{
+	display: inline-block;
+	width:45%;
+	position: relative;
+}
+.control-70{
+	display: inline-block;
+	width:69%;
+	position: relative;
+}
+.control-30{
+	display: inline-block;
+	width:29%;
+	position: relative;
+}
+.control-30 input{
+	width:100% !important;
+}
+
+.controls label, .controls input {
+	display: inline-block;
+}
+.controls label {
+	width: 110px;
+	color: #444;
+	vertical-align: middle;
+}
+.controls input, .controls select {
+	width: calc(100% - 130px);
+	padding: 10px 5px;
+	border-radius: 5px;
+	border: #ddd solid 1px;
+	height: 40px;
+	background: #fff;
+
+}
+.full-span {
+	width: 100% !important;
+}
+input[type="color"] {
+	width: 30px;
+	height: 30px;
+	border: none;
+	border-radius: 50%;
+	padding: 0;
+	background: none;
+	vertical-align: middle;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+	border: solid 1px #000; /*change color of the swatch border here*/
+	border-radius: 50%;
+}
+input[type="checkbox"] {
+	height: auto !important;
+}
+.controls .form-control {
+	margin-bottom: 25px;
+}
+
+.graph-screen {
+	padding: 20px;
+}
+.graph {
+	position: relative;
+	max-width: 1000px;
+	height: 760px;
+
+  border-radius: 4px;
+  border: #eee solid 2px;
+	overflow: scroll;
+	background: #fff;
+}.graph svg{
+	background: #fff;
+}
+.graph img {
+	width: 100%;
+}
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px !important;
+  padding: 0!important;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #4CAF50;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+#Neighbours {
+	overflow-x: scroll;
+	white-space: nowrap;
+}
+#Neighbours, .nodes {
+	padding:4px 16px;
+	color: #555;
+	margin:0 !important;
+}

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Main plot</title>
+	<link rel="stylesheet" type="text/css" href="static/assets/css/style.css">
+</head>
+<meta charset="utf-8">
+<style>
+.links line {
+  stroke-opacity: 0.8;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 80px;
+    line-height: 40px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: gold;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+.overlay {
+  position: absolute;
+  background: #000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: block;
+}
+.overlay span {
+  display: inline-block;
+  margin: 0 auto;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  color: #fff;
+  transform: translateY(-50%);
+  transform: translateX(-50%);
+  text-transform: uppercase;
+  font-size: 25px;
+  letter-spacing: 1px;
+  width:200px;
+}
+
+.delete {
+  transition: 300ms;
+  color: red;
+  z-index: 9999999;
+  display: inline-block;
+  font-size: 16px;
+  float: right;
+}
+
+
+</style>
+<body><div class="container">
+  <div class="overlay">
+    <span>Please Wait</span>
+  </div>
+	<div class="row graph-screen">
+		<div class="graph col-70">
+      <div class="nodes"><span id="Nodes">Nodes: ...</span></div>
+      <p id='Neighbours'>Neighbours: ... </p>
+			<div id="svg"></div>
+		</div>
+
+    <div class="col-30">
+      <div class="controls">
+        <div class="form">
+          <form method="post" action="/update_graph">
+            <div class="form-control">
+              <label>Remove Node</label>
+              <input type="text" placeholder="Node1" value="" class="input-control" data-token="rm_node" data-node="node">
+            </div>
+            <div class="form-control">
+              <label>Remove Edge</label>
+              <input type="text" placeholder="Node1, Node2" value="" class="input-control" data-token="rm_edge" data-node="edge">
+            </div>
+            <div class="form-control">
+              <label>Process Flow</label>
+              <input type="text" placeholder="eg n1, n2, n3" value="" class="input-control" data-token="v_process" data-node="process_agents">
+            </div>
+            <div class="form-control">
+              <div class="control-70">
+                <label>Random Walk</label>
+                <input type="text" placeholder="node1, node2" value="" class="input-control" data-token="w_node" data-node="w_agents">
+              </div>
+              <div class="control-30">
+                <input type="text" placeholder="length" value="" class="input-control" data-token="walk_len" data-node="w_length">
+              </div>
+            </div>
+            <div class="form-control">
+              <label>Cluster</label>
+              <select class="input-control" data-token="l_cluster" data-node="l_cluster">
+                <option vlaue="">---</option>
+                <option value="louvain">Louvain Grouping</option>
+              </select>
+            </div>
+            <div class="form-control">
+              <div class="half-control">
+                <label>Display Labels</label>
+                <input type="checkbox" class="check-control" data-token="d_labels">
+              </div>
+
+              <div class="half-control">
+                <label>Fixed Nodes</label>
+                <input type="checkbox" class="check-control" data-token="f_nodes">
+              </div>
+            </div>
+            <div class="form-control">
+                <label>Label color</label>
+                <input type="color" value="" class="input-control" data-token="c_labels" data-node="c_labels">
+            </div>
+            <div class="form-control">
+              <label>Edges color</label>
+              <input type="color" value="" class="input-control" data-token="c_edges" data-node="c_edges">
+            </div>
+            <div class="form-control buttons">
+              <input type="button" id="send_form" class="btn" value="Visualise">
+              <a class="btn" href="/update_graph">Go Back</a>
+              <a class="btn sec-btn" href="/">New Graph</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+	</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script type="text/javascript" src="static/assets/js/interactive_graph.js"></script>
+<script type="text/javascript">
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+  var op = '';
+  var param = '';
+  var att = {};
+
+  $(document).ready(function () {
+
+   $(function () {
+      $.selectNode = function(d) {
+
+        $('.input-control').each(function(e) {
+          if($(this).attr("data-node") == "node") {
+            $(this).val(d);
+          }
+
+        });
+
+      }
+
+      $.processForm = function() {
+        op = '';
+        param = '';
+        att = {};
+
+        $('.input-control').each(function(e) {
+          if($(this).val() != "") {
+            let attr = $(this).attr("data-token");
+            let node = $(this).attr("data-node");
+
+            op = op.concat(','+attr);
+            att[node] = $(this).val();
+          }
+
+        });
+
+        $('.check-control').each(function(e) {
+          if($(this).is(":checked")) {
+            let node = $(this).attr("data-token");
+
+            op = op.concat(','+node);
+          }
+
+        });
+
+      }
+
+      $.sendForm = function(e) {
+
+        att['op'] = op;
+        att['param'] = param;
+
+        $.ajax({
+          url: $SCRIPT_ROOT + '/ajax_compute',
+          data: att,
+          type: "GET",
+          timeout: 30000,
+          beforeSend: function() {
+            $('.overlay').css('display', 'block');
+          },
+          success: function(data){
+            $('.overlay').css('display', 'none');
+            interactive_graph(true)
+          },
+          error: function(data){
+            $('.overlay').css('background', 'rgba(255,80,100,1)');
+            $('.overlay span').html('Error');
+          }
+        });
+      }
+  });
+
+
+  $('#send_form').click(function() {
+    $.processForm();
+    $.sendForm();
+  });
+
+
+  interactive_graph(true);
+
+  $('.overlay').css('display', 'none');
+  });
+</script>
+</body>
+</html>

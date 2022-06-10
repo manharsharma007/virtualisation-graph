@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Main plot</title>
+	<link rel="stylesheet" type="text/css" href="static/assets/css/style.css">
+</head>
+<body>
+<div class="container">
+	<div class="row main-center">
+		<div class="controls">
+
+				<form method="post" action="/create_graph" enctype="multipart/form-data">
+					<div class="form-control">
+						<select name="file_name" class="full-span">
+							<option value="graph.tgf">Sample Graph</option>
+							<option value="knuth.tgf">Knuth</option>
+							<option value="karate.tgf">Karate</option>
+							<option value="path_graph.tgf">Path Graph</option>
+							<option value="football.tgf">Football</option>
+							<option value="complete.tgf">Complete</option>
+							<option value="tree.tgf">Tree</option>
+							<option value="random.tgf">Random</option>
+						</select>
+					</div>
+					<div class="form-control">
+						<input type="file" name="file" class="file" id="file">
+						<label for="file">Select File</label>
+					</div>
+					<div class="form-control">
+						<input type="submit" name="">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	var inputs = document.querySelectorAll( '.file' );
+
+	Array.prototype.forEach.call( inputs, function( input ) {
+	  var label = input.nextElementSibling,
+	              labelVal = label.innerHTML;
+
+	  input.addEventListener( 'change', function( e ) {
+	    var fileName = '';
+
+	    fileName = e.target.value.split( '\\' ).pop();
+
+	    if ( fileName ) {
+	      label.innerHTML = fileName;
+	    } else {
+	      label.innerHTML = labelVal;
+	    }
+	  });
+	});
+</script>
+</body>
+</html>
