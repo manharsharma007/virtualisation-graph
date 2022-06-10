@@ -83,6 +83,7 @@ function interactive_graph(edges = true, simulate = true) {
             .links(graph.links);
         }
       }
+      
         else {
           simulation.nodes(graph.nodes).force("center", d3.forceCenter(width / 2, height / 2))
             .on("tick", ticked);
